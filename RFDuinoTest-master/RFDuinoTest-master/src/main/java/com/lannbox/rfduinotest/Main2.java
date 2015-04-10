@@ -48,7 +48,7 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
     public static String mickyMouse = "EA:02:7F:9E:5F:7C";  //  "EA:02:7F:9E:5F:7C";
     public static String donaldDuck = "EC:C7:D5:05:67:BF";
     public static String touchData;
-    int c = 0, score1 = 100, score2 = 100;
+    int c = 0, score1 = 100, score2 = 100, connect = 0;
 
     private final BroadcastReceiver bluetoothStateReceiver = new BroadcastReceiver() {
         @Override
@@ -142,9 +142,11 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
 
         while (c == 0) {
             Intent rfduinoIntent = new Intent(Main2.this, RFduinoService.class);
-            boolean out = bindService(rfduinoIntent, rfduinoServiceConnection, BIND_AUTO_CREATE);
+            boolean out = bindService(rfduinoIntent,
+                    rfduinoServiceConnection, BIND_AUTO_CREATE);
             if (out) {
                 c = 1;
+                Toast.makeText(Main2.this, "out = 1", Toast.LENGTH_SHORT).show();
             }
             Log.d("Connect", String.valueOf(out)); // ToDo
         }
@@ -206,6 +208,9 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
             connectionText = "Connecting...";
         } else if (state == STATE_CONNECTED) {
             connectionText = "Connected";
+            connect=1;
+        }else if (state !=  STATE_CONNECTED) {
+            connect=0;
         }
         Log.d("Connection Status", connectionText);
 
@@ -328,26 +333,40 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
 
         private void activeSwapping() {
             int t = 0;
-            if (X == (screenW - ballW) / 2 && dX < 0) { // TODO X>(screenW - ballW)/2
+            if (X > (screenW - ballW) / 2 && dX < 0) { // TODO X>(screenW - ballW)/2
                 if (bluetoothDevice.getAddress().equals(donaldDuck)) {
                     rfduinoService.disconnect();
                     rfduinoService.connect(mickyMouse);
 // TODO                        rfduinoService.onBind(getIntent());
                     Log.d("Phase I wall left", "Donald disconnected");
+                    t=0;
                 }
                 while (!bluetoothDevice.getAddress().equals(mickyMouse)) {
                     rfduinoService.connect(mickyMouse);
                     Log.d("RDF Micky Mouse", "Micky connected -- attacking left" + String.valueOf(t));
+                    t++;
+                    if (t==7){
+                        Log.d("Left", "Process too heavy");
+                        Toast.makeText(Main2.this, "Micky ,please check connection settings", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
                 }
             } else if (X < (screenW - ballW) / 2 && dX > 0) {
                 if (bluetoothDevice.getAddress().equals(mickyMouse)) {
                     rfduinoService.disconnect();
                     rfduinoService.connect(donaldDuck);
                     Log.d("Phase I wall right", "Micky disconnected");
+                    t=0;
                 }
                 while (!bluetoothDevice.getAddress().equals(donaldDuck)) {
                     rfduinoService.connect(donaldDuck);
                     Log.d("RDF Donald Duck", "Donald connected -- attacking right" + String.valueOf(t));
+                    t++;
+                    if (t==7){
+                        Log.d("Right", "Process too heavy");
+                        Toast.makeText(Main2.this, "Donald, please check connection settings", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
                 }
             }
         }
@@ -384,12 +403,21 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
             }
 
             // The show must go on
-            if (platesTouched == -1 || bluetoothDevice != null)
+//            if (platesTouched == -1 || bluetoothDevice != null)
+            if (state != STATE_CONNECTED){
                 if (X > (screenW - ballW)) {
                     dX = (-1) * dX; //Reverse speed when bottom hit.
+                    Toast.makeText(Main2.this, "Rebound Overrided: Please check your connection settings",
+                            Toast.LENGTH_SHORT).show();
+
                 } else if (X <= 0) {
                     dX = (-1) * dX;
+                    Toast.makeText(Main2.this, "Rebound Overrided: Please check your connection settings",
+                            Toast.LENGTH_SHORT).show();
                 }
+                Log.d("State override", "Override");
+                Toast.makeText(Main2.this, "Please check your connection settings", Toast.LENGTH_SHORT).show();
+            }
         }
 
         private void music() {
