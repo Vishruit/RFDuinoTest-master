@@ -163,6 +163,16 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        bluetoothAdapter.stopLeScan(this);
+        unregisterReceiver(scanModeReceiver);
+        unregisterReceiver(bluetoothStateReceiver);
+        unregisterReceiver(rfduinoReceiver);
+        bluetoothAdapter.disable();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         bluetoothAdapter.stopLeScan(this);
