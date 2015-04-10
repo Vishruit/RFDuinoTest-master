@@ -169,6 +169,7 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
         unregisterReceiver(scanModeReceiver);
         unregisterReceiver(bluetoothStateReceiver);
         unregisterReceiver(rfduinoReceiver);
+        bluetoothAdapter.disable();
     }
 
     private void upgradeState(int newState) {
@@ -430,7 +431,8 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
         }
 
         private void numberOfPlatesTouched() {
-            if (!touchData.isEmpty())   // todo if(touchData!=null)
+            if(bluetoothDevice != null)
+            if (touchData!=null)   // todo if(touchData!=null)
                 if (touchData.equals("00")) {
                     platesTouched = 0;
                 } else if (touchData.equals("01")) {
