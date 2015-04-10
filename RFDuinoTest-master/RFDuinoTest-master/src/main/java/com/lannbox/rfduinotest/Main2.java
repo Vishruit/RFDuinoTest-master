@@ -9,9 +9,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -130,6 +132,8 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//        this.setRequestedOrientation(WindowManager.LayoutParams.SCREEN_ORIENTATION_CHANGED);
 
         setContentView(R.layout.activity_main);
 
@@ -239,7 +243,8 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
         int ballW;
         int ballH;
         int angle;
-        float dY, dX;
+        float dY, dX, tX, tY;
+
 
         int platesTouched = 0;
 
@@ -262,6 +267,10 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
             k = intent.getIntExtra("touchValue", 1);
             dX = r1.nextInt(1) + k;
             dY = r2.nextInt(1) + k;
+            long startTime = System.currentTimeMillis();
+            Paint text = new Paint();
+            text.setColor(Color.RED);
+            text.setTextSize(20);
         }
 
         @Override
@@ -329,17 +338,35 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
             }
 
             if (score1 > 1000) {
+                tX=dX;
+                tY=dY;
                 dX = 0;
                 dY = 0;
                 Toast.makeText(Main2.this, "Player A wins", Toast.LENGTH_SHORT).show();
+                timer(canvas);
             } else if (score2 > 1000) {
                 dX = 0;
                 dY = 0;
                 Toast.makeText(Main2.this, "Player B wins", Toast.LENGTH_SHORT).show();
+                timer(canvas);
             }
 
             //Call the next frame.
             invalidate();
+        }
+
+        public void timer(Canvas canvas) {
+            long startTime = System.currentTimeMillis();
+            Paint text = new Paint();
+            text.setColor(Color.RED);
+            text.setTextSize(20);
+            long timeNow = System.currentTimeMillis();
+            long timeToGo = 10 - (timeNow - startTime) / 1000;
+            if (timeToGo >= 0) {
+                canvas.drawText(Long.toString(timeToGo), 10, 25, text);
+            }
+            dX = tX;  // reviving X direction
+            dY = tY;  // reviving Y direction
         }
 
         private void activeSwapping() {
