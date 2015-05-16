@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigationModel
+  ns = "http://schemas.android.com?import=com.android.tools.idea.editors.navigation.model.*">
+  <locations  
+    class = "java.util.ArrayList">
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.StartPage"/>
+      <point      
+        x = "8080"      
+        y = "741"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.Splash"/>
+      <point      
+        x = "7760"      
+        y = "376"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.MyAct"/>
+      <point      
+        x = "935"      
+        y = "3252"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.Instructions"/>
+      <point      
+        x = "7817"      
+        y = "1312"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.MainActivity2"/>
+      <point      
+        x = "1928"      
+        y = "3286"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.MainActivity3"/>
+      <point      
+        x = "2065"      
+        y = "3549"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.MainActivity4"/>
+      <point      
+        x = "2259"      
+        y = "2910"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.FullscreenActivity"/>
+      <point      
+        x = "4930"      
+        y = "2875"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.MainActivity5"/>
+      <point      
+        x = "3012"      
+        y = "342"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.Final"/>
+      <point      
+        x = "7463"      
+        y = "1837"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.Main2"/>
+      <point      
+        x = "2031"      
+        y = "2761"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.MainActivity"/>
+      <point      
+        x = "1940"      
+        y = "3400"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.Main4"/>
+      <point      
+        x = "1723"      
+        y = "3366"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.lannbox.rfduinotest.Main3"/>
+      <point      
+        x = "992"      
+        y = "2796"/>
+    </statePointEntry>
+  </locations>
+</navigationModel>

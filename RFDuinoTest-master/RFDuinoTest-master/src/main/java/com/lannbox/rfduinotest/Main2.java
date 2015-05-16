@@ -49,7 +49,7 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
 
     public static String mickyMouse = "EA:02:7F:9E:5F:7C";  //  "EA:02:7F:9E:5F:7C";
     public static String donaldDuck = "EC:C7:D5:05:67:BF";
-    public static String touchData;
+    public static String touchData = "No Return Value";
     int c = 0, score1 = 100, score2 = 100, connect = 0;
 
     private final BroadcastReceiver bluetoothStateReceiver = new BroadcastReceiver() {
@@ -86,8 +86,8 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
                             Toast.makeText(Main2.this, "Micky Mouse is Connected", Toast.LENGTH_SHORT).show();
                             c++;
                             Log.d("Micky Mouse", "Micky Mouse is Connected");
-                            Log.d("Address", bluetoothDevice.getAddress());
-                            rfduinoService.disconnect();
+//                            Log.d("Address", bluetoothDevice.getAddress());
+//TODO                            rfduinoService.disconnect();
                             Log.d("Micky Mouse", "Micky Mouse is disconnected");
                         }
                     while (c == 1)
@@ -96,7 +96,7 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
                             Toast.makeText(Main2.this, "Donald Duck are Connected", Toast.LENGTH_SHORT).show();
                             c++;
                             Log.d("Donald Duck", "Donald Duck is Connected");
-                            Log.d("Address", bluetoothDevice.getAddress());
+//                            Log.d("Address", bluetoothDevice.getAddress());
                         }
                 }
                 Toast.makeText(Main2.this, "Both players are Connected",
@@ -166,15 +166,15 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
         updateState(bluetoothAdapter.isEnabled() ? STATE_DISCONNECTED : STATE_BLUETOOTH_OFF);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        bluetoothAdapter.stopLeScan(this);
-        unregisterReceiver(scanModeReceiver);
-        unregisterReceiver(bluetoothStateReceiver);
-        unregisterReceiver(rfduinoReceiver);
-        bluetoothAdapter.disable();
-    }
+//ToDo    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        bluetoothAdapter.stopLeScan(this);
+//        unregisterReceiver(scanModeReceiver);
+//        unregisterReceiver(bluetoothStateReceiver);
+//        unregisterReceiver(rfduinoReceiver);
+//        bluetoothAdapter.disable();
+//    }
 
     @Override
     protected void onStop() {
@@ -183,6 +183,11 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
         unregisterReceiver(scanModeReceiver);
         unregisterReceiver(bluetoothStateReceiver);
         unregisterReceiver(rfduinoReceiver);
+        bluetoothAdapter.disable();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         bluetoothAdapter.disable();
     }
 
@@ -244,7 +249,7 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
         int ballH;
         int angle;
         float dY, dX, tX, tY;
-
+        String scoreA, scoreB;
 
         int platesTouched = 0;
 
@@ -271,6 +276,7 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
             Paint text = new Paint();
             text.setColor(Color.RED);
             text.setTextSize(20);
+
         }
 
         @Override
@@ -291,16 +297,16 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
             canvas.drawBitmap(bgr, 0, 0, null);
 
             // To make sure that the BTDevice is connected
-            while (bluetoothDevice == null) {
-                try {
-                    rfduinoService.connect(donaldDuck);
-                    Toast.makeText(Main2.this, "Bluetooth Device was NULL", Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    Toast.makeText(Main2.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                } finally {
-                    rfduinoService.connect(mickyMouse);
-                }
-            }
+// ToDO           while (bluetoothDevice == null) {
+//                try {
+//                    rfduinoService.connect(donaldDuck);
+//                    Toast.makeText(Main2.this, "Bluetooth Device was NULL", Toast.LENGTH_SHORT).show();
+//                } catch (Exception e) {
+//                    Toast.makeText(Main2.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                } finally {
+//                    rfduinoService.connect(mickyMouse);
+//                }
+//            }
 
             numberOfPlatesTouched();  // Assigns the touchData to platesTouched
             velocityFunction();
@@ -319,21 +325,34 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
             canvas.drawText(touchData, 50, 80, paint);
             canvas.drawText("X=" + String.valueOf(X), 100, 80, paint);
             canvas.drawText("Y=" + String.valueOf(Y), 150, 80, paint);
+            scoreA = "PlayerA \n" + String.valueOf(1000 - score1);
+            scoreB = "PlayerB \n" + String.valueOf(1000 - score2);
+            canvas.drawText(scoreA, 50, 100, paint);
+            canvas.drawText(scoreB, 50, 100, paint);
 
+            Paint paint1 = new Paint();
+            paint1.setColor(Color.BLACK);
+//            paint1.setStrokeWidth(3);
+//            canvas.drawRect(30, 30, 80, 80, paint1);
+//            paint1.setStrokeWidth(0);
 
             if (X > (screenW - ballW) / 2 && platesTouched > 0 && dX > 0) {
                 score1++;
                 if (dX < 0) {
-                    String scoreA = "PlayerA \n" + String.valueOf(1000 - score1);
-                    canvas.drawText(scoreA, 50, 100, paint);
+                    scoreA = "PlayerA \n" + String.valueOf(1000 - score1);
+                    paint1.setColor(Color.RED);
+                    canvas.drawRect(70, getTop(), getRight(), getBottom(), paint1 );
+
                 }
             }
 
             if (X < (screenW - ballW) / 2 && platesTouched >= 1 && dX < 0) {
                 score2++;
                 if (dX > 0) {
-                    String scoreB = "PlayerB \n" + String.valueOf(1000 - score2);
-                    canvas.drawText(scoreB, 50, 100, paint);
+                    scoreB = "PlayerB \n" + String.valueOf(1000 - score2);
+                    paint1.setColor(Color.RED);
+                    canvas.drawRect(getLeft(), getTop(), 70, getBottom(), paint1 );
+
                 }
             }
 
@@ -369,12 +388,17 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
             dY = tY;  // reviving Y direction
         }
 
-        private void activeSwapping() {
+        public void activeSwapping() {
             int t = 0;
+            if(platesTouched != -1)
             if (X > (screenW - ballW) / 2 && dX < 0) { // TODO X>(screenW - ballW)/2
                 if (bluetoothDevice.getAddress().equals(donaldDuck)) {
                     rfduinoService.disconnect();
-                    rfduinoService.connect(mickyMouse);
+                    int k=0;
+                    while(!rfduinoService.connect(mickyMouse)) {
+                        k++;
+                        if(k>5) break;
+                    }
 // TODO                        rfduinoService.onBind(getIntent());
                     Log.d("Phase I wall left", "Donald disconnected");
                     t=0;
@@ -391,7 +415,7 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
                 }
             } else if (X < (screenW - ballW) / 2 && dX > 0) {
                 if (bluetoothDevice.getAddress().equals(mickyMouse)) {
-                    rfduinoService.disconnect();
+// todo                   rfduinoService.disconnect();
                     rfduinoService.connect(donaldDuck);
                     Log.d("Phase I wall right", "Micky disconnected");
                     t=0;
@@ -409,7 +433,7 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
             }
         }
 
-        private void velocityFunction() {
+        public void velocityFunction() {
             //Compute roughly ball speed and location.
             Y += (int) dY; //Increase or decrease vertical position.
             X += (int) dX; //Increase or decrease vertical position.
@@ -419,7 +443,7 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
                 angle = 0;
         }
 
-        private void rebound() {
+        public void rebound() {
             if (X >= (screenW - ballW) && platesTouched >= 1) {
                 dX = (-1) * dX; //Reverse speed when bottom hit.
                 if (ourSong.isPlaying())
@@ -443,31 +467,33 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
             // The show must go on
 //            if (platesTouched == -1 || bluetoothDevice != null)
             if (state != STATE_CONNECTED){
-                if (X > (screenW - ballW)) {
+                if (X >= (screenW - ballW)) {
                     dX = (-1) * dX; //Reverse speed when bottom hit.
                     Toast.makeText(Main2.this, "Rebound Overrided: Please check your connection settings",
                             Toast.LENGTH_SHORT).show();
+                    Log.d("Rebound", "Overrided");
 
                 } else if (X <= 0) {
                     dX = (-1) * dX;
                     Toast.makeText(Main2.this, "Rebound Overrided: Please check your connection settings",
                             Toast.LENGTH_SHORT).show();
+                    Log.d("Rebound", "Overrided");
                 }
                 Log.d("State override", "Override");
                 Toast.makeText(Main2.this, "Please check your connection settings", Toast.LENGTH_SHORT).show();
             }
         }
 
-        private void music() {
-            if (X > (screenW) / 2 && dY > 0) {
+        public void music() {
+            if (X > (screenW) / 2 && dX > 0) {
                 ourSong.start();
             }
-            if (X < (screenW) / 2 & dY < 0) {
+            if (X < (screenW) / 2 & dX < 0) {
                 ourSong2.start();
             }
         }
 
-        private void numberOfPlatesTouched() {
+        public void numberOfPlatesTouched() {
             if(bluetoothDevice != null)
             if (touchData!=null)   // todo if(touchData!=null)
                 if (touchData.equals("00")) {
@@ -498,8 +524,8 @@ public class Main2 extends Activity implements BluetoothAdapter.LeScanCallback {
         Main2.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(Main2.this, BluetoothHelper.getDeviceInfoText
-                        (bluetoothDevice, rssi, scanRecord), Toast.LENGTH_SHORT).show();
+                Toast.makeText(Main2.this, BluetoothHelper.getDeviceInfoText(
+                        bluetoothDevice, rssi, scanRecord), Toast.LENGTH_SHORT).show();
                 updateUi();
             }
         });
